@@ -1,14 +1,21 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { generateUploadUrl } from "@/lib/storage"
+import { rateLimit } from "@/lib/rate-limit"
 
-export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
+export async function POST(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
     const session = await auth()
     if (!session?.user || session.user.role !== 'CREATOR') {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    }
+
+    // 10 uploads per hour per creator
+    const isAllowed = await rateLimit(`upload:${session.user.id}`, 10, 3600);
+    if (!isAllowed) {
+        return NextResponse.json({ error: "Upload rate limit exceeded. Try again later." }, { status: 429 })
     }
 
     const mission = await prisma.mission.findUnique({ where: { id: params.id } })
@@ -18,7 +25,6 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
 
     const storageKey = `submissions/${params.id}/${session.user.id}/${Date.now()}.mp4`
 
-    // Generate real S3 signed URL
     let signedUrl = `https://mock-storage.com/upload?key=${storageKey}`;
     try {
         signedUrl = await generateUploadUrl(storageKey);

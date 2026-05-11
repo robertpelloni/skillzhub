@@ -2,6 +2,7 @@ import { Queue } from 'bullmq'
 import Redis from 'ioredis'
 
 let connection: Redis | null = null;
+let queueInstance: Queue | null = null;
 
 function getConnection() {
     if (!connection) {
@@ -22,10 +23,13 @@ function getConnection() {
 
 export const processingQueue = new Proxy({} as Queue, {
     get: (target, prop) => {
-        if (!target[prop as keyof Queue]) {
-             const q = new Queue('video-processing', { connection: getConnection() });
-             return q[prop as keyof Queue];
+        if (!queueInstance) {
+             queueInstance = new Queue('video-processing', { connection: getConnection() });
         }
-        return target[prop as keyof Queue];
+        const val = queueInstance[prop as keyof Queue];
+        if (typeof val === 'function') {
+             return val.bind(queueInstance);
+        }
+        return val;
     }
 });

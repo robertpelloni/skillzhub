@@ -53,13 +53,39 @@ export default function AdminDashboard() {
            {queue.length > 0 ? (
             <ul className="space-y-4">
               {queue.map((s: any) => (
-                <li key={s.id} className="bg-white p-4 rounded shadow">
-                   <h3 className="font-bold">Mission: {s.mission.title}</h3>
-                   <p className="text-sm text-gray-600">Creator: {s.creator.name} ({s.creator.email})</p>
-                   <p className="text-sm text-gray-600 mt-2">Duration: {s.duration_seconds}s | Resoluton: {s.resolution_width}x{s.resolution_height}</p>
-                   <div className="mt-4 flex gap-2">
-                       <button onClick={() => reviewSubmission(s.id, 'ACCEPTED', (s.duration_seconds || 0)/60)} className="bg-green-500 text-white px-3 py-1 rounded text-sm hover:bg-green-600">Accept Full</button>
-                       <button onClick={() => reviewSubmission(s.id, 'REJECTED', 0)} className="bg-red-500 text-white px-3 py-1 rounded text-sm hover:bg-red-600">Reject</button>
+                <li key={s.id} className="bg-white p-4 rounded shadow flex flex-col md:flex-row gap-6">
+                   {/* Mock Video Player */}
+                   <div className="w-full md:w-1/3 bg-black flex items-center justify-center rounded overflow-hidden aspect-video">
+                       <span className="text-white text-sm">Video Preview Unavailable</span>
+                       {/* In a real scenario, use: <video src={`/api/v1/submissions/${s.id}/stream`} controls className="w-full h-full object-cover" /> */}
+                   </div>
+
+                   <div className="w-full md:w-2/3">
+                       <h3 className="font-bold text-lg">Mission: {s.mission.title}</h3>
+                       <p className="text-sm text-gray-600 mt-1"><strong>Creator:</strong> {s.creator.name} ({s.creator.email})</p>
+                       <div className="grid grid-cols-2 gap-4 mt-4 bg-gray-50 p-3 rounded border">
+                            <div>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">Duration</p>
+                                <p className="font-mono text-sm">{s.duration_seconds}s</p>
+                            </div>
+                            <div>
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">Resolution</p>
+                                <p className="font-mono text-sm">{s.resolution_width}x{s.resolution_height} @ {s.fps}fps</p>
+                            </div>
+                            <div className="col-span-2">
+                                <p className="text-xs text-gray-500 uppercase tracking-wide">Auto-Labels</p>
+                                <p className="text-sm italic">{s.labels_summary?.action_summary || 'N/A'}</p>
+                            </div>
+                       </div>
+
+                       <div className="mt-6 flex gap-3">
+                           <button onClick={() => reviewSubmission(s.id, 'ACCEPTED', (s.duration_seconds || 0)/60)} className="bg-green-500 text-white px-4 py-2 rounded text-sm hover:bg-green-600 font-medium">
+                               Approve & Pay Full
+                           </button>
+                           <button onClick={() => reviewSubmission(s.id, 'REJECTED', 0)} className="bg-red-500 text-white px-4 py-2 rounded text-sm hover:bg-red-600 font-medium">
+                               Reject
+                           </button>
+                       </div>
                    </div>
                 </li>
               ))}

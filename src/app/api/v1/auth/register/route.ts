@@ -1,10 +1,18 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
 import { Role } from "@prisma/client"
+import { rateLimit } from "@/lib/rate-limit"
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   try {
+    const ip = req.headers.get('x-forwarded-for') || '127.0.0.1';
+    const isAllowed = await rateLimit(`register:${ip}`, 5, 3600); // 5 accounts per hour per IP
+
+    if (!isAllowed) {
+        return NextResponse.json({ error: "Too many registration attempts. Please try again later." }, { status: 429 })
+    }
+
     const { name, email, password } = await req.json()
 
     if (!email || !password) {

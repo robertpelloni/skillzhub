@@ -4,12 +4,21 @@ import { auth } from "@/lib/auth"
 
 export async function GET(req: Request) {
   try {
+    const session = await auth()
+
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status')
 
-    let whereClause = {}
+    let whereClause: any = {}
+
+    // If query requires specific status, add it
     if (status) {
-      whereClause = { status }
+      whereClause.status = status;
+    }
+
+    // Security boundary: companies should only see their own missions in the dashboard
+    if (session?.user?.role === 'COMPANY') {
+        whereClause.company_id = session.user.id;
     }
 
     const missions = await prisma.mission.findMany({

@@ -1,14 +1,37 @@
-import { NextResponse } from "next/server"
+import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { generateDownloadUrl } from "@/lib/storage"
+import bcrypt from "bcryptjs"
 
-export async function GET(req: Request, props: { params: Promise<{ id: string }> }) {
+export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {
-    const session = await auth()
-    if (!session?.user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
+    let companyId: string | null = null;
+
+    // Check for Programmatic API Key Access
+    const authHeader = req.headers.get('authorization');
+    if (authHeader && authHeader.startsWith('Bearer ')) {
+        const rawKey = authHeader.split(' ')[1];
+
+        const allKeys = await prisma.aPIKey.findMany({ select: { id: true, company_id: true, hashed_key: true }});
+        for (const k of allKeys) {
+            if (await bcrypt.compare(rawKey, k.hashed_key)) {
+                companyId = k.company_id;
+                // Update last used timestamp
+                await prisma.aPIKey.update({ where: { id: k.id }, data: { last_used_at: new Date() }});
+                break;
+            }
+        }
+    }
+
+    // Fallback to UI Session Auth
+    if (!companyId) {
+        const session = await auth()
+        if (!session?.user) {
+          return NextResponse.json({ error: "Unauthorized: Missing valid session or API Key" }, { status: 401 })
+        }
+        companyId = session.user.id;
     }
 
     const dataset = await prisma.dataset.findUnique({
@@ -24,8 +47,9 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
       return NextResponse.json({ error: "Dataset not found" }, { status: 404 })
     }
 
-    if (session.user.role === 'COMPANY' && dataset.company_id !== session.user.id) {
-         return NextResponse.json({ error: "Forbidden" }, { status: 403 })
+    // Ensure company owns this dataset before generating manifest
+    if (dataset.company_id !== companyId) {
+         return NextResponse.json({ error: "Forbidden: You do not have access to this dataset" }, { status: 403 })
     }
 
     const samples = await Promise.all(dataset.dataset_samples.map(async (ds) => {
