@@ -1,7 +1,9 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function AdminDashboard() {
+  const router = useRouter()
   const [queue, setQueue] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -9,6 +11,7 @@ export default function AdminDashboard() {
     setLoading(true)
     try {
       const res = await fetch('/api/v1/admin/submissions/queue')
+      if (res.status === 401 || res.status === 403) router.push('/api/auth/signin')
       if (res.ok) {
          const data = await res.json()
          setQueue(data)
@@ -18,6 +21,10 @@ export default function AdminDashboard() {
     }
     setLoading(false)
   }
+
+  useEffect(() => {
+     fetchQueue()
+  }, [])
 
   const reviewSubmission = async (id: string, status: string, minutes: number) => {
     try {
@@ -40,7 +47,7 @@ export default function AdminDashboard() {
       <div className="mt-8">
         <h2 className="text-xl font-semibold mb-4">Submissions Pending Review</h2>
         <button onClick={fetchQueue} disabled={loading} className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition disabled:opacity-50">
-             {loading ? 'Loading...' : 'Load Queue'}
+             {loading ? 'Loading...' : 'Refresh Queue'}
         </button>
         <div className="bg-gray-100 p-4 rounded-lg">
            {queue.length > 0 ? (

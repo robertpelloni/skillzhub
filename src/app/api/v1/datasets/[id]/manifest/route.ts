@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { generateDownloadUrl } from "@/lib/storage"
 
 export async function GET(req: Request, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -27,18 +28,31 @@ export async function GET(req: Request, props: { params: Promise<{ id: string }>
          return NextResponse.json({ error: "Forbidden" }, { status: 403 })
     }
 
+    const samples = await Promise.all(dataset.dataset_samples.map(async (ds) => {
+        let videoUrl = `https://mock-storage.com/download/${ds.submission.normalized_storage_key}`;
+        if (ds.submission.normalized_storage_key) {
+           try {
+             videoUrl = await generateDownloadUrl(ds.submission.normalized_storage_key);
+           } catch(e) {
+             console.warn("Using mock download URL, S3 credentials likely missing");
+           }
+        }
+
+        return {
+            sample_id: ds.id,
+            submission_id: ds.submission_id,
+            duration: ds.submission.duration_seconds,
+            labels: ds.submission.labels_summary,
+            video_url: videoUrl
+        }
+    }))
+
     const manifest = {
         dataset_id: dataset.id,
         title: dataset.title,
         license_type: dataset.license_type,
         total_duration: dataset.total_duration_seconds,
-        samples: dataset.dataset_samples.map(ds => ({
-            sample_id: ds.id,
-            submission_id: ds.submission_id,
-            duration: ds.submission.duration_seconds,
-            labels: ds.submission.labels_summary,
-            video_url: `https://mock-storage.com/download/${ds.submission.normalized_storage_key}`
-        }))
+        samples
     }
 
     return NextResponse.json(manifest)

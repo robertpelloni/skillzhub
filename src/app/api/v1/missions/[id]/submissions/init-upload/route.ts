@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
+import { generateUploadUrl } from "@/lib/storage"
 
 export async function POST(req: Request, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
@@ -15,19 +16,26 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
       return NextResponse.json({ error: "Mission not open or not found" }, { status: 400 })
     }
 
-    const mockStorageKey = `submissions/${params.id}/${session.user.id}/${Date.now()}.mp4`
-    const mockSignedUrl = `https://mock-storage.com/upload?key=${mockStorageKey}`
+    const storageKey = `submissions/${params.id}/${session.user.id}/${Date.now()}.mp4`
+
+    // Generate real S3 signed URL
+    let signedUrl = `https://mock-storage.com/upload?key=${storageKey}`;
+    try {
+        signedUrl = await generateUploadUrl(storageKey);
+    } catch(e) {
+        console.warn("Using mock upload URL, S3 credentials likely missing");
+    }
 
     const submission = await prisma.submission.create({
       data: {
         mission_id: params.id,
         creator_id: session.user.id,
-        raw_storage_key: mockStorageKey,
+        raw_storage_key: storageKey,
         processing_status: 'UPLOADED'
       }
     })
 
-    return NextResponse.json({ uploadUrl: mockSignedUrl, submissionId: submission.id })
+    return NextResponse.json({ uploadUrl: signedUrl, submissionId: submission.id })
   } catch (error) {
     return NextResponse.json({ error: "Failed to initialize upload" }, { status: 500 })
   }

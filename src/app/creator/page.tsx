@@ -1,7 +1,9 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { useRouter } from "next/navigation"
 
 export default function CreatorDashboard() {
+  const router = useRouter()
   const [missions, setMissions] = useState([])
   const [loading, setLoading] = useState(false)
   const [uploadingFor, setUploadingFor] = useState<string | null>(null)
@@ -10,13 +12,18 @@ export default function CreatorDashboard() {
     setLoading(true)
     try {
       const res = await fetch('/api/v1/missions?status=OPEN')
+      if (res.status === 401 || res.status === 403) router.push('/api/auth/signin')
       const data = await res.json()
-      setMissions(data)
+      if (res.ok) setMissions(data)
     } catch (e) {
       console.error(e)
     }
     setLoading(false)
   }
+
+  useEffect(() => {
+     fetchMissions()
+  }, [])
 
   const handleUpload = async (missionId: string) => {
     setUploadingFor(missionId)
@@ -47,7 +54,7 @@ export default function CreatorDashboard() {
         <h2 className="text-xl font-semibold mb-4">Available Missions</h2>
         <div className="bg-gray-100 p-4 rounded-lg">
           <button onClick={fetchMissions} disabled={loading} className="mb-4 bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition disabled:opacity-50">
-             {loading ? 'Loading...' : 'Load Open Missions'}
+             {loading ? 'Loading...' : 'Refresh Open Missions'}
           </button>
 
           {missions.length > 0 ? (
