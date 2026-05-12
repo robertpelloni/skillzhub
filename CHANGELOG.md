@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.1.8
+- Resolved merge conflicts between the MVP feature branch and `main` while preserving the newer MVP implementation across API docs, admin video preview, worker processing, and dependency manifests.
+
 ## v0.1.7
 - Refactored `worker.ts` FFprobe extraction logic into a pure, testable utility (`src/lib/video-processor.ts`).
 - Expanded the Vitest suite with unit tests verifying FFprobe metadata extraction (resolution, duration, fps).
