@@ -6,7 +6,7 @@
 - [ ] Write a Dockerfile specifically for running `worker.ts` independently of the Next.js web process for cloud deployments.
 
 ### Medium Priority
-- [ ] Implement actual video metadata extraction (resolution, duration, fps) inside the worker job processor.
+- [x] Implement actual video metadata extraction (resolution, duration, fps) inside the worker job processor.
 - [ ] Setup OpenAPI (Swagger) spec generation using a library like `swagger-jsdoc` to document the API surface automatically.
 - [ ] Replace placeholder videos in the Admin review UI with actual presigned URLs pointing to the raw storage bucket.
 

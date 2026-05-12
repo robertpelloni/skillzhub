@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.4
+- Integrated `fluent-ffmpeg` and `@ffmpeg-installer/ffmpeg` into the BullMQ background worker.
+- Replaced hardcoded dummy video metadata with real FFprobe extraction against the uploaded video streams.
+
 ## v0.1.3
 - Replaced mocked Stripe integrations with the official Stripe Node.js SDK.
 - The `src/app/api/v1/creator/onboarding/route.ts` now uses `stripe.accountLinks.create` for real Connect Express onboarding.
