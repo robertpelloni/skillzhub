@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.5
+- Integrated `swagger-jsdoc` and `swagger-ui-react`.
+- Added JSDoc OpenAPI annotations to `/api/v1/missions` and `/api/v1/datasets/[id]/manifest` routes.
+- Exposed a dynamic OpenAPI JSON endpoint at `/api/v1/docs`.
+- Created an interactive Swagger UI developer portal at `/docs`.
+
 ## v0.1.4
 - Integrated `fluent-ffmpeg` and `@ffmpeg-installer/ffmpeg` into the BullMQ background worker.
 - Replaced hardcoded dummy video metadata with real FFprobe extraction against the uploaded video streams.

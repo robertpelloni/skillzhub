@@ -26,4 +26,4 @@
 - [ ] Add Playwright for end-to-end user flow testing.
 - [ ] Build out real video playback interfaces for the Creator dashboard.
 - [ ] Improve Dataset Analytics dashboard with deeper aggregations.
-- [ ] OpenAPI / Swagger documentation generation for `/api/v1/*`.
+- [x] OpenAPI / Swagger documentation generation for `/api/v1/*`.

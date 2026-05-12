@@ -7,7 +7,7 @@
 
 ### Medium Priority
 - [x] Implement actual video metadata extraction (resolution, duration, fps) inside the worker job processor.
-- [ ] Setup OpenAPI (Swagger) spec generation using a library like `swagger-jsdoc` to document the API surface automatically.
+- [x] Setup OpenAPI (Swagger) spec generation using a library like `swagger-jsdoc` to document the API surface automatically.
 - [ ] Replace placeholder videos in the Admin review UI with actual presigned URLs pointing to the raw storage bucket.
 
 ### Low Priority
