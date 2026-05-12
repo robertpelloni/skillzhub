@@ -4,6 +4,31 @@ import { auth } from "@/lib/auth"
 import { generateDownloadUrl } from "@/lib/storage"
 import crypto from "crypto"
 
+/**
+ * @swagger
+ * /datasets/{id}/manifest:
+ *   get:
+ *     summary: Retrieve a dataset manifest
+ *     description: Returns the dataset manifest containing presigned video download URLs and labels. Authenticates via UI session or Programmatic API Key (Bearer token).
+ *     security:
+ *       - ApiKeyAuth: []
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The Dataset ID
+ *     responses:
+ *       200:
+ *         description: Dataset manifest JSON.
+ *       401:
+ *         description: Unauthorized.
+ *       403:
+ *         description: Forbidden (Does not own dataset).
+ *       404:
+ *         description: Dataset not found.
+ */
 export async function GET(req: NextRequest, props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
   try {

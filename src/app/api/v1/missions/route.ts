@@ -3,6 +3,18 @@ import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
 import { MissionSchema } from "@/lib/schemas"
 
+/**
+ * @swagger
+ * /missions:
+ *   get:
+ *     summary: Retrieve a list of missions
+ *     description: Returns a list of missions. Companies only see their own. Creators see open missions.
+ *     responses:
+ *       200:
+ *         description: A list of missions.
+ *       500:
+ *         description: Internal Server Error
+ */
 export async function GET(req: Request) {
   try {
     const session = await auth()
@@ -32,6 +44,31 @@ export async function GET(req: Request) {
   }
 }
 
+/**
+ * @swagger
+ * /missions:
+ *   post:
+ *     summary: Create a new mission
+ *     description: Allows a COMPANY user to create a new mission for creators to fulfill.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               title:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Mission created successfully.
+ *       400:
+ *         description: Validation failed.
+ *       403:
+ *         description: Forbidden (Not a company).
+ */
 export async function POST(req: Request) {
   try {
     const session = await auth()

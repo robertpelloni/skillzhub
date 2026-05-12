@@ -19,11 +19,17 @@
 ## Phase 3: Infrastructure Integration (Upcoming)
 - [x] Implement actual AWS S3 / Cloudflare R2 presigned URLs in `src/lib/storage.ts` (currently mocked).
 - [x] Implement actual Stripe Connect onboarding, account creation, and ledger transfers in `src/lib/payments.ts` and API routes (currently mocked).
-- [ ] Connect BullMQ `worker.ts` to real FFmpeg subprocesses for video normalization.
+- [x] Connect BullMQ `worker.ts` to real FFmpeg subprocesses for video normalization.
 - [ ] Integrate a real Vision-Language Model (VLM) (e.g., Gemini Flash or Qwen-VL) into the worker for auto-labeling (action summary, object tags).
 
 ## Phase 4: Polish, UI, and E2E Tests
 - [ ] Add Playwright for end-to-end user flow testing.
 - [ ] Build out real video playback interfaces for the Creator dashboard.
 - [ ] Improve Dataset Analytics dashboard with deeper aggregations.
-- [ ] OpenAPI / Swagger documentation generation for `/api/v1/*`.
+- [x] OpenAPI / Swagger documentation generation for `/api/v1/*`.
+
+## Phase 5: Additional Deployment Polish
+- [x] Dockerfile explicitly written for the independent BullMQ `worker.ts` node process.
+- [x] Replaced generic video placeholders in the Admin QC UI with authorized AWS S3 presigned URLs.
+- [x] Refactored background worker logic into testable utilities (`src/lib/video-processor.ts`).
+- [x] Expanded Vitest test suite to cover worker pure functions.
