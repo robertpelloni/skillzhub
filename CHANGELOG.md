@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.12
+- Added `webhook_url` and `webhook_secret` fields to the `Mission` Prisma schema.
+- Built a secure `dispatchWebhook` service that signs POST payloads with SHA-256 HMAC for company verification.
+- Integrated asynchronous webhook dispatching into the Admin review route whenever a submission is accepted.
+- Updated the Company Dashboard UI to allow setting optional webhook configurations during Mission creation.
+
 ## v0.1.11
 - Created new `/api/v1/company/analytics` endpoint leveraging Prisma aggregations (`groupBy`, `aggregate`) to compute dataset volumes, total capital deployed, and submission status distributions.
 - Overhauled the `CompanyDashboard` UI:

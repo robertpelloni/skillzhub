@@ -28,6 +28,9 @@
 - [x] Improve Dataset Analytics dashboard with deeper aggregations.
 - [x] OpenAPI / Swagger documentation generation for `/api/v1/*`.
 
+## Phase 6: Advanced Connectivity
+- [x] Integrate Company Webhooks allowing programmatic notification when dataset samples are approved.
+
 ## Phase 5: Additional Deployment Polish
 - [x] Dockerfile explicitly written for the independent BullMQ `worker.ts` node process.
 - [x] Replaced generic video placeholders in the Admin QC UI with authorized AWS S3 presigned URLs.

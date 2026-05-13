@@ -21,6 +21,8 @@ export default function CompanyDashboard() {
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
   const [price, setPrice] = useState("")
+  const [webhookUrl, setWebhookUrl] = useState("")
+  const [webhookSecret, setWebhookSecret] = useState("")
 
   const [keyName, setKeyName] = useState("")
 
@@ -63,7 +65,9 @@ export default function CompanyDashboard() {
         body: JSON.stringify({
           title, description, price_per_minute: parseFloat(price),
           task_type: "manipulation", environment_type: "any",
-          license_type: "EXCLUSIVE"
+          license_type: "EXCLUSIVE",
+          webhook_url: webhookUrl || undefined,
+          webhook_secret: webhookSecret || undefined
         })
       })
       if (res.ok) {
@@ -181,6 +185,8 @@ export default function CompanyDashboard() {
                     <div className="space-y-3">
                         <input type="text" placeholder="Mission Title" value={title} onChange={e=>setTitle(e.target.value)} className="block w-full border border-gray-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
                         <textarea placeholder="Description of the footage needed..." value={description} onChange={e=>setDescription(e.target.value)} className="block w-full border border-gray-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none min-h-[80px]" required />
+                        <input type="url" placeholder="Webhook URL (Optional)" value={webhookUrl} onChange={e=>setWebhookUrl(e.target.value)} className="block w-full border border-gray-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" />
+                        <input type="password" placeholder="Webhook Secret (Optional)" value={webhookSecret} onChange={e=>setWebhookSecret(e.target.value)} className="block w-full border border-gray-200 p-2.5 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" />
                         <div className="relative">
                             <span className="absolute left-3 top-2.5 text-gray-500 text-sm">$</span>
                             <input type="number" step="0.01" placeholder="Price per minute" value={price} onChange={e=>setPrice(e.target.value)} className="block w-full border border-gray-200 p-2.5 pl-7 rounded-lg text-sm focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none" required />
