@@ -22,14 +22,12 @@ export async function processPayouts(submissionId: string, tx?: Prisma.Transacti
     const platformFee = gross * 0.20 // 20% fee
     const net = gross - platformFee
 
-    const roundedAcceptedMinutes = Number(submission.accepted_minutes.toFixed(4))
-
     const ledger = await db.paymentLedger.create({
         data: {
             submission_id: submission.id,
             creator_id: submission.creator_id,
             mission_id: submission.mission_id,
-            accepted_minutes: roundedAcceptedMinutes,
+            accepted_minutes: submission.accepted_minutes,
             rate_per_minute: rate,
             gross_amount: gross,
             platform_fee_amount: platformFee,

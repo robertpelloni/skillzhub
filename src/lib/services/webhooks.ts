@@ -16,7 +16,14 @@ function isPrivateIp(ip: string) {
   }
   if (net.isIP(ip) === 6) {
     const normalized = ip.toLowerCase()
-    return normalized === "::1" || normalized.startsWith("fc") || normalized.startsWith("fd") || normalized.startsWith("fe80:")
+    return (
+      normalized === "::1" ||
+      normalized.startsWith("::ffff:127.") ||
+      normalized.startsWith("fc") ||
+      normalized.startsWith("fd") ||
+      normalized.startsWith("fe80:") ||
+      normalized.startsWith("ff")
+    )
   }
   return true
 }
@@ -55,6 +62,12 @@ export async function dispatchWebhook(url: string, secret: string | null, payloa
         if (secret) {
             const signature = crypto.createHmac('sha256', secret).update(bodyStr).digest('hex')
             headers['X-SkillzHub-Signature'] = `sha256=${signature}`
+        }
+
+        // Re-validate destination immediately before dispatch to reduce DNS TOCTOU risk.
+        if (!(await isPublicWebhookUrl(url))) {
+            console.error(`Webhook blocked during final validation: ${url}`)
+            return
         }
 
         const res = await fetch(url, {

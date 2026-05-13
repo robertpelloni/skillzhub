@@ -47,7 +47,7 @@ export async function generateDownloadUrl(key: string): Promise<string> {
 
 export async function objectExists(key: string): Promise<boolean> {
   if (!hasStorageConfig()) {
-    return true
+    return false
   }
 
   try {
