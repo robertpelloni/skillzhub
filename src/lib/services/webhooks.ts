@@ -39,7 +39,11 @@ async function isPublicWebhookUrl(urlString: string) {
   if (net.isIP(url.hostname)) {
     return !isPrivateIp(url.hostname)
   }
-  const records = await dns.lookup(url.hostname, { all: true })
+  const lookupPromise = dns.lookup(url.hostname, { all: true })
+  const timeoutPromise = new Promise<never>((_, reject) => {
+    setTimeout(() => reject(new Error("DNS lookup timed out")), 2000)
+  })
+  const records = (await Promise.race([lookupPromise, timeoutPromise])).slice(0, 8)
   return records.length > 0 && records.every((record) => !isPrivateIp(record.address))
 }
 
@@ -64,7 +68,7 @@ export async function dispatchWebhook(url: string, secret: string | null, payloa
             headers['X-SkillzHub-Signature'] = `sha256=${signature}`
         }
 
-        // Re-validate destination immediately before dispatch to reduce DNS TOCTOU risk.
+        // Re-validate destination immediately before dispatch to reduce (not eliminate) DNS TOCTOU risk.
         if (!(await isPublicWebhookUrl(url))) {
             console.error(`Webhook blocked during final validation: ${url}`)
             return
