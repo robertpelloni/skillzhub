@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.11
+- Created new `/api/v1/company/analytics` endpoint leveraging Prisma aggregations (`groupBy`, `aggregate`) to compute dataset volumes, total capital deployed, and submission status distributions.
+- Overhauled the `CompanyDashboard` UI:
+  - Added a Recharts Pie Chart to visualize the Mission Pipeline status distribution.
+  - Added a KPI metric for Total Capital Deployed.
+  - Refined the aesthetics of the Dataset Volumes Bar Chart and all dashboard cards.
+
 ## v0.1.10
 - Integrated `@playwright/test` for robust, headless End-to-End (E2E) testing.
 - Configured `playwright.config.ts` to spin up the local Next.js dev server automatically and execute tests against Chromium.
