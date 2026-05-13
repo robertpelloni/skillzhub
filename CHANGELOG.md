@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.14
+- Implemented fast, fail-open Edge Middleware validation in `src/middleware.ts` to immediately block malformed API keys before hitting the Node.js event loop or Database connections.
+- Added comprehensive React Error Boundaries (`src/app/error.tsx` and `src/app/global-error.tsx`) to catch unhandled runtime crashes gracefully, providing the user with recovery options rather than a raw server stack trace.
+
 ## v0.1.13
 - Installed the `@google/genai` SDK for Vision-Language Model integration.
 - Implemented `generateVideoLabels` in `src/lib/services/vlm-processor.ts` as a stub interface to the Gemini 2.0 Flash API to generate automated `action_summary`, `objects`, and `environment` labels from video frames.
