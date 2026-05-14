@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.1.17
+- Implemented "Bounty Boosts" dynamic pricing mechanism.
+- Created `/api/v1/missions/[id]/boost` endpoint enabling companies to increment an active mission's `price_per_minute` payout by 20%.
+- Updated the Company Dashboard UI to include a "Bounty Boost" quick-action button on active mission cards.
+
 ## v0.1.16
 - Laid the frontend UI groundwork for Phase 8 Synthetic Data Pipelines.
 - Added interactive "Generate Depth Maps" and "Generate Segmentation Masks" upsell buttons directly to the Dataset cards on the Company Dashboard.

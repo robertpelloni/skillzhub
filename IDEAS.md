@@ -7,4 +7,3 @@
 
 ## Product Features
 - **Creator Tiers:** Gamify the creator side with "Trust Tiers." High-trust creators bypass manual admin QC and go straight to dataset generation.
-- **Bounty Boosts:** Allow companies to surge pricing dynamically for specific environments if they aren't getting enough submissions.

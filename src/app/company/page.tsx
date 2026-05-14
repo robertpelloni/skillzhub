@@ -94,6 +94,17 @@ export default function CompanyDashboard() {
     } catch (e) {}
   }
 
+  const handleBoostMission = async (id: string) => {
+      try {
+          const res = await fetch(`/api/v1/missions/${id}/boost`, { method: "POST" })
+          if (res.ok) {
+              fetchDashboardData()
+          } else {
+              alert("Failed to boost mission.")
+          }
+      } catch (e) {}
+  }
+
   const handleDeleteKey = async (id: string) => {
       try {
           const res = await fetch(`/api/v1/company/api-keys/${id}`, { method: 'DELETE' })
@@ -208,9 +219,16 @@ export default function CompanyDashboard() {
                                     <span>{new Date(m.created_at).toLocaleDateString()}</span>
                                 </p>
                             </div>
-                            <span className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${m.status === 'OPEN' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-100 border-gray-200 text-gray-600'}`}>
-                                {m.status}
-                            </span>
+                            <div className="flex flex-col items-end gap-2">
+                                {m.status === 'OPEN' && (
+                                    <button onClick={() => handleBoostMission(m.id)} className="text-[10px] bg-amber-100 text-amber-800 border border-amber-200 px-2 py-1 rounded hover:bg-amber-200 transition font-bold shadow-sm opacity-0 group-hover:opacity-100">
+                                        +20% Bounty Boost
+                                    </button>
+                                )}
+                                <span className={`text-xs px-2.5 py-1 rounded-full font-semibold border ${m.status === 'OPEN' ? 'bg-green-50 border-green-200 text-green-700' : 'bg-gray-100 border-gray-200 text-gray-600'}`}>
+                                    {m.status}
+                                </span>
+                            </div>
                         </div>
                     ))
                 ) : <p className="text-sm text-gray-500 italic text-center py-4">No missions created yet.</p>}

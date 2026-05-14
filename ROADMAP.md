@@ -37,6 +37,9 @@
 - [x] Refactored background worker logic into testable utilities (`src/lib/video-processor.ts`).
 - [x] Expanded Vitest test suite to cover worker pure functions.
 
+## Phase 9: Marketplace Dynamics
+- [x] Implemented "Bounty Boosts" allowing companies to surge pricing dynamically (+20%) for specific open missions.
+
 ## Phase 8: Synthetic Data Pipelines
 - [x] Placed UI hooks for "Generate Depth Maps" and "Generate Segmentation Masks" upsells on the Company Dashboard.
 
