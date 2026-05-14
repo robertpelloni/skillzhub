@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.1.16
+- Laid the frontend UI groundwork for Phase 8 Synthetic Data Pipelines.
+- Added interactive "Generate Depth Maps" and "Generate Segmentation Masks" upsell buttons directly to the Dataset cards on the Company Dashboard.
+
 ## v0.1.15
 - Implemented **Creator Trust Tiers**.
 - Updated Prisma schema to include a `trust_tier` field on the `User` model.

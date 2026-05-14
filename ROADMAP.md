@@ -37,5 +37,8 @@
 - [x] Refactored background worker logic into testable utilities (`src/lib/video-processor.ts`).
 - [x] Expanded Vitest test suite to cover worker pure functions.
 
+## Phase 8: Synthetic Data Pipelines
+- [x] Placed UI hooks for "Generate Depth Maps" and "Generate Segmentation Masks" upsells on the Company Dashboard.
+
 ## Phase 7: Product Gamification
 - [x] Implemented "Creator Tiers" mechanism. Tier 2+ creators bypass manual Admin QC entirely and automatically trigger dataset generation and payouts.

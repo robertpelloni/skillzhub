@@ -273,6 +273,14 @@ export default function CompanyDashboard() {
                             <button onClick={() => window.location.href=`/api/v1/datasets/${d.id}/manifest`} className="w-full bg-white border-2 border-purple-600 text-purple-700 px-4 py-2 rounded-lg text-sm font-bold hover:bg-purple-50 transition shadow-sm flex justify-center items-center gap-2">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
                                 Download JSON Manifest
+                            <div className="grid grid-cols-2 gap-2 mt-3">
+                               <button onClick={() => alert("Depth Map generation pipeline coming in Phase 8!")} className="w-full bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg text-[11px] font-bold hover:bg-blue-100 transition shadow-sm">
+                                   + Depth Maps
+                               </button>
+                               <button onClick={() => alert("Segmentation Mask generation pipeline coming in Phase 8!")} className="w-full bg-blue-50 text-blue-700 border border-blue-200 px-3 py-1.5 rounded-lg text-[11px] font-bold hover:bg-blue-100 transition shadow-sm">
+                                   + Seg. Masks
+                               </button>
+                            </div>
                             </button>
                         </div>
                     ))
