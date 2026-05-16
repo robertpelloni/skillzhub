@@ -2,21 +2,13 @@
 
 The scope of these instructions applies to the entire repository. Read and follow these directives before making changes.
 
-## 1. Versioning
-* Every session that modifies code or project state MUST result in a version bump.
-* Update the version string in the `VERSION` file.
-* Update the `CHANGELOG.md` file describing the changes for that version.
-* The version number MUST be referenced in the commit message (e.g., `feat: implement S3 upload (v0.1.2)`).
+## 1. Primary Directives
+All agents MUST follow the consolidated rules defined in [UNIVERSAL_INSTRUCTIONS.md](./UNIVERSAL_INSTRUCTIONS.md).
 
-## 2. Documentation
-* Maintain `ROADMAP.md` and `TODO.md` meticulously. Do not delete remaining items unless completed; check them off.
-* Whenever you learn a new constraint or architectural quirk about this codebase, add it to `MEMORY.md`.
-* Document dependencies and structural roles in `LIBRARIES.md`.
+## 2. Agent Workflow
+- At the beginning of each session: Read all rule documentation, learn the repo structure, and analyze recent changes.
+- At the end of each session: Update all documentation, bump the version, and update `HANDOFF.md`.
 
-## 3. Code Style & Comments
-* Comment code in extreme depth. Explain the "why" and the architectural reasoning behind a block.
-* If a block of code is entirely self-explanatory, leave it bare. Do not comment for the sake of commenting.
-
-## 4. Submodules
-* If submodules are added, they must be documented in `LIBRARIES.md` with their repository URL, commit hash/version, and purpose.
-* You must recursively update and push submodules when syncing the repository.
+## 3. Communication
+- If a goal is ambiguous, ask for clarification via `request_user_input`.
+- Document your findings and technical decisions in detail within the relevant documentation files.

@@ -124,7 +124,21 @@ export default function CreatorDashboard() {
       <div className="flex flex-col md:flex-row justify-between items-center gap-4">
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Creator Dashboard</h1>
-            <p className="text-gray-600 mt-1">Welcome back, {profile?.name || 'Creator'}</p>
+            <div className="flex items-center gap-3 mt-1">
+                <p className="text-gray-600">Welcome back, {profile?.name || 'Creator'}</p>
+                {profile?.trust_tier && (
+                    <span className={`text-[10px] uppercase tracking-wider font-bold px-2 py-0.5 rounded-full border ${
+                        profile.trust_tier === 'HIGH_TRUST' ? 'bg-indigo-50 text-indigo-700 border-indigo-200' : 'bg-gray-50 text-gray-600 border-gray-200'
+                    }`}>
+                        {profile.trust_tier.replace('_', ' ')}
+                    </span>
+                )}
+                {profile?.reputation_score !== undefined && (
+                    <span className="text-[10px] font-bold text-amber-600 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200">
+                        Score: {profile.reputation_score}
+                    </span>
+                )}
+            </div>
           </div>
           <div>
              {!profile?.payout_account_id ? (

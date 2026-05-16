@@ -13,6 +13,11 @@ enum Role {
   ADMIN
 }
 
+enum TrustTier {
+  BASIC
+  HIGH_TRUST
+}
+
 enum MissionStatus {
   DRAFT
   OPEN
@@ -49,15 +54,17 @@ enum DatasetStatus {
 }
 
 model User {
-  id                String   @id @default(uuid())
-  role              Role     @default(CREATOR)
+  id                String    @id @default(uuid())
+  role              Role      @default(CREATOR)
   name              String?
-  email             String   @unique
+  email             String    @unique
   password_hash     String?
   kyc_status        String?
   payout_account_id String?
-  created_at        DateTime @default(now())
-  updated_at        DateTime @updatedAt
+  trust_tier        TrustTier @default(BASIC)
+  reputation_score  Int       @default(0)
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
 
   missions       Mission[]
   submissions    Submission[]

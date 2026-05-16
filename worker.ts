@@ -2,6 +2,7 @@ import { Worker } from 'bullmq'
 import Redis from 'ioredis'
 import { PrismaClient } from '@prisma/client'
 import { probeVideo, extractMetadata } from './src/lib/video-processor'
+import { acceptSubmissionAndTriggerDownstream } from './src/lib/services/submissions'
 
 const prisma = new PrismaClient()
 const connection = new Redis(process.env.REDIS_URL || 'redis://localhost:6379')
@@ -39,13 +40,15 @@ const worker = new Worker('video-processing', async job => {
     const isQCPass = width >= 1920 && fps >= 30
 
     const mockLabels = {
-        action_summary: "Person walks into garage and picks up power drill",
-        objects: ["garage", "drill", "hand"],
-        environment: ["indoor", "cluttered"]
+        action_summary: "Descriptive Action: Human performing task in recorded environment",
+        objects: ["human", "tool", "environment"],
+        environment: ["indoor"]
     }
 
-    await prisma.submission.update({
+    // Update submission with extracted metadata and VLM labels
+    const updatedSubmission = await prisma.submission.update({
         where: { id: submissionId },
+        include: { creator: true },
         data: {
             duration_seconds: duration,
             resolution_width: width,
@@ -57,6 +60,17 @@ const worker = new Worker('video-processing', async job => {
             normalized_storage_key: rawStorageKey
         }
     })
+
+    // AUTONOMOUS ACCEPTANCE:
+    // If the creator is HIGH_TRUST and the technical QC passed, we bypass manual review.
+    if (isQCPass && updatedSubmission.creator.trust_tier === 'HIGH_TRUST') {
+        console.log(`Autonomous acceptance triggered for submission ${submissionId} (Creator Tier: HIGH_TRUST)`);
+        await acceptSubmissionAndTriggerDownstream(
+            submissionId,
+            duration / 60, // Convert seconds to minutes for the payout logic
+            duration
+        );
+    }
 
     console.log(`Finished processing ${submissionId}`)
   } catch (error) {

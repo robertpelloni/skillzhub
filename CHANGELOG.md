@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.1.13
+- Implemented **Creator Trust Tiers** (`BASIC`, `HIGH_TRUST`) to enable autonomous marketplace operations.
+- Built **Autonomous Acceptance** logic in the background worker: High-trust creators' submissions bypass manual review and trigger immediate payouts/dataset inclusion upon passing technical QC.
+- Enhanced **Creator Dashboard UI** to display trust tiers and reputation scores, improving transparency for bounty hunters.
+- Consolidated global agent instructions into a single `UNIVERSAL_INSTRUCTIONS.md` and archived redundant model-specific documentation.
+- Updated `VISION.md`, `DEPLOY.md`, `LIBRARIES.md`, and created `MEMORY.md` to reflect the project's current architectural state and long-term goals.
+
 ## v0.1.12
 - Added `webhook_url` and `webhook_secret` fields to the `Mission` Prisma schema.
 - Built a secure `dispatchWebhook` service that signs POST payloads with SHA-256 HMAC for company verification.
