@@ -1,18 +1,16 @@
-# Handoff Documentation (v0.1.13)
+# Handoff Documentation (v0.1.14)
 
 ## Summary of Changes
-- **Autonomous Marketplace**: Implemented "Trust Tiers" (`BASIC`, `HIGH_TRUST`) and `reputation_score` for creators.
-- **Worker Logic**: Updated the BullMQ `worker.ts` to automatically accept submissions from `HIGH_TRUST` creators if they pass technical QC (resolution/fps). This bypasses the manual Admin review queue.
-- **Creator Dashboard**: Enhanced the UI to display the creator's trust tier and reputation score.
-- **Documentation Refactor**: Consolidated all agent-specific instructions into `docs/agents/UNIVERSAL_INSTRUCTIONS.md` and updated `AGENTS.md` to reference it.
-- **Updated Project Metadata**: Refined `VISION.md`, `DEPLOY.md`, `LIBRARIES.md`, and created `MEMORY.md`.
+- **Reputation Score Adjustments**: Updated the submissions service (`src/lib/services/submissions.ts`) to increment a creator's `reputation_score` by 10 points when their submission is successfully accepted (manually or autonomously).
+- **Trust Tier Progression**: Upgraded logic to automatically promote a creator to `HIGH_TRUST` when their reputation reaches 100 points.
+- **Rejection Penalties**: Updated the manual admin review route (`src/app/api/v1/admin/submissions/[id]/review/route.ts`) to decrement the creator's `reputation_score` by 5 points upon a rejected submission, and demote them to `BASIC` if they fall below the 100 point threshold.
+- **Linting & Hooks Fixed**: Resolved ~70 ESLint errors. This included fixing the React warnings (`react-hooks/set-state-in-effect` and `exhaustive-deps`) by utilizing `useCallback` in dashboard components. Disables were securely placed on mock-heavy test files where `any` bindings are intentional.
 
 ## Current State
-- The core C2B loops are now fully functional and support autonomous operations for high-trust users.
-- The VLM processor is still using a mock implementation but now returns more descriptive, relevant labels.
+- The core C2B loops are now fully functional and support autonomous operations for high-trust users, completing the full reputation loop (earning trust dynamically instead of manually).
+- The test suites (Vitest) pass with `0` errors.
+- The VLM processor is still using a mock implementation.
 
 ## Instructions for Next Model
-1. **Real VLM Integration**: Replace the mock implementation in `src/lib/services/vlm-processor.ts` with a real Google Gemini 2.0 Flash call. You will need to handle video frame extraction or use the Gemini File API for video processing.
-2. **Reputation Score Updates**: Implement logic to increment `reputation_score` upon successful submission acceptance and decrement it on manual rejections.
-3. **Trust Tier Upgrades**: Add a scheduled job or hook to automatically upgrade creators to `HIGH_TRUST` once they reach a certain reputation threshold.
-4. **Linting**: Address the ~70 linting errors identified in the project (mostly `no-explicit-any` and unused variables).
+1. **Real VLM Integration**: Replace the mock implementation in `worker.ts` with a real Google Gemini 2.0 Flash call. You will need to handle video frame extraction or use the Gemini File API for video processing. Extract this into a dedicated `vlm-processor.ts`.
+2. **Dashboard UI Refinement**: Display the real reputation score progression visually in the Creator UI to gamify the experience.

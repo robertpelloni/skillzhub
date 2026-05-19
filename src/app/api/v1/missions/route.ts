@@ -22,7 +22,7 @@ export async function GET(req: Request) {
     const { searchParams } = new URL(req.url)
     const status = searchParams.get('status')
 
-    let whereClause: any = {}
+    const whereClause: Record<string, unknown> = {}
 
     if (status) {
       whereClause.status = status;

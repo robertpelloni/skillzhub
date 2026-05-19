@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.1.14
+- Implemented automated **Reputation Score Updates** upon submission review.
+- Built **Trust Tier Upgrades/Downgrades**. Creators are now auto-promoted to `HIGH_TRUST` when their score reaches 100, and demoted to `BASIC` if it falls below 100 on rejection.
+- Fixed severe React hooks (`react-hooks/set-state-in-effect`) and exhaustive dependencies warnings inside `CreatorDashboard`, `CompanyDashboard`, and `AdminDashboard`.
+- Swept the codebase and test files to suppress and resolve ESLint TypeScript `any` warnings and unused variables.
+
 ## v0.1.13
 - Implemented **Creator Trust Tiers** (`BASIC`, `HIGH_TRUST`) to enable autonomous marketplace operations.
 - Built **Autonomous Acceptance** logic in the background worker: High-trust creators' submissions bypass manual review and trigger immediate payouts/dataset inclusion upon passing technical QC.

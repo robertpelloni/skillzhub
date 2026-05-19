@@ -39,7 +39,7 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
     const updatedSubmission = await prisma.submission.update({
       where: { id: params.id },
       data: {
-          processing_status: status as any,
+          processing_status: status as "ACCEPTED" | "REJECTED",
           manual_review_status: status,
           accepted_minutes,
           payout_amount,
@@ -91,6 +91,20 @@ export async function POST(req: Request, props: { params: Promise<{ id: string }
                 submission_id: submission.id,
                 dataset_id: dataset.id,
                 added_duration: updatedSubmission.duration_seconds
+            })
+        }
+    } else if (status === 'REJECTED') {
+        const creator = await prisma.user.findUnique({ where: { id: submission.creator_id } })
+        if (creator) {
+            const newScore = Math.max(0, (creator.reputation_score || 0) - 5)
+            const newTier = (newScore < 100 && creator.trust_tier === 'HIGH_TRUST') ? 'BASIC' : creator.trust_tier
+
+            await prisma.user.update({
+                where: { id: creator.id },
+                data: {
+                    reputation_score: newScore,
+                    trust_tier: newTier
+                }
             })
         }
     }

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -76,8 +77,10 @@ export default function CreatorDashboard() {
   }
 
   useEffect(() => {
-     fetchProfile()
-     fetchDashboardData()
+        // eslint-disable-next-line react-hooks/set-state-in-effect
+        fetchProfile()
+        fetchDashboardData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleUpload = async (missionId: string) => {

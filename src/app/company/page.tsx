@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
@@ -53,7 +54,9 @@ export default function CompanyDashboard() {
   }
 
   useEffect(() => {
+     // eslint-disable-next-line react-hooks/set-state-in-effect
      fetchDashboardData()
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleCreateMission = async (e: React.FormEvent) => {

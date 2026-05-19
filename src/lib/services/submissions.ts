@@ -74,5 +74,20 @@ export async function acceptSubmissionAndTriggerDownstream(submissionId: string,
         });
     }
 
+    // 4. Update Creator Reputation & Trust Tier
+    const creator = await prisma.user.findUnique({ where: { id: submission.creator_id } });
+    if (creator) {
+        const newScore = (creator.reputation_score || 0) + 10;
+        const newTier = (newScore >= 100 && creator.trust_tier === 'BASIC') ? 'HIGH_TRUST' : creator.trust_tier;
+
+        await prisma.user.update({
+            where: { id: creator.id },
+            data: {
+                reputation_score: newScore,
+                trust_tier: newTier
+            }
+        });
+    }
+
     return updatedSubmission;
 }
