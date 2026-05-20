@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -24,7 +23,7 @@ export async function DELETE(req: Request, props: { params: Promise<{ id: string
     })
 
     return NextResponse.json({ message: "Key revoked successfully" }, { status: 200 })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to revoke API key" }, { status: 500 })
   }
 }

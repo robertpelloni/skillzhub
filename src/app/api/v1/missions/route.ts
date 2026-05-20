@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -40,7 +39,7 @@ export async function GET(req: Request) {
     })
 
     return NextResponse.json(missions)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch missions" }, { status: 500 })
   }
 }
@@ -92,7 +91,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json(mission, { status: 201 })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create mission" }, { status: 500 })
   }
 }

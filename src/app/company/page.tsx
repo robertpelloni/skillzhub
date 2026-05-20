@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 "use client"
 import { useState, useEffect } from "react"
@@ -16,7 +15,7 @@ export default function CompanyDashboard() {
   // Analytics State
   const [analytics, setAnalytics] = useState<any>({ datasetDurations: [], statusCounts: [], totalSpend: 0 })
 
-  const [loading, setLoading] = useState(false)
+  const [, setLoading] = useState(false)
 
   // Form state
   const [formOpen, setFormOpen] = useState(false)
@@ -78,7 +77,7 @@ export default function CompanyDashboard() {
         setFormOpen(false)
         fetchDashboardData()
       }
-    } catch (e) {}
+    } catch {}
   }
 
   const handleCreateKey = async (e: React.FormEvent) => {
@@ -95,7 +94,7 @@ export default function CompanyDashboard() {
         setKeyName("")
         fetchDashboardData()
       }
-    } catch (e) {}
+    } catch {}
   }
 
   const handleDeleteKey = async (id: string) => {
@@ -104,7 +103,7 @@ export default function CompanyDashboard() {
           if (res.ok) {
               fetchDashboardData()
           }
-      } catch (e) {}
+      } catch {}
   }
 
   return (

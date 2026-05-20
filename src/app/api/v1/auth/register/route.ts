@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import bcrypt from "bcryptjs"
@@ -43,7 +42,7 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    const { password_hash, ...userWithoutPassword } = user
+    const userWithoutPassword = { ...user, password_hash: undefined }
 
     return NextResponse.json(userWithoutPassword, { status: 201 })
   } catch (error) {

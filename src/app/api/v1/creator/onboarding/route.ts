@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -14,7 +13,7 @@ function getStripe() {
     return stripeClient;
 }
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
     const session = await auth()
     if (!session?.user || session.user.role !== 'CREATOR') {

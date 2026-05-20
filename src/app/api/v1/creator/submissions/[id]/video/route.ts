@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -51,7 +50,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
     const videoUrl = await generateDownloadUrl(submission.raw_storage_key);
 
     return NextResponse.json({ url: videoUrl })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to generate video url" }, { status: 500 })
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import Redis from 'ioredis'
 
 // Simple Token Bucket Rate Limiter using Redis
@@ -42,7 +41,7 @@ export async function rateLimit(identifier: string, limit: number, windowSec: nu
         }
 
         return true;
-    } catch (error) {
+    } catch {
         // Fail open if Redis is down
         return true;
     }

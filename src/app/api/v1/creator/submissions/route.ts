@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -17,7 +16,7 @@ export async function GET() {
     })
 
     return NextResponse.json(submissions)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch submissions" }, { status: 500 })
   }
 }

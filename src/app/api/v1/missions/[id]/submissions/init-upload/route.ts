@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -38,7 +37,7 @@ export async function POST(req: NextRequest, props: { params: Promise<{ id: stri
     })
 
     return NextResponse.json({ uploadUrl: signedUrl, submissionId: submission.id })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to initialize upload" }, { status: 500 })
   }
 }

@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -75,7 +74,7 @@ export async function GET() {
         totalSpend
     })
 
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch analytics" }, { status: 500 })
   }
 }

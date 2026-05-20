@@ -1,8 +1,6 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { headers } from "next/headers";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,7 +15,7 @@ import path from 'path';
 let version = 'v0.0.0';
 try {
     version = fs.readFileSync(path.join(process.cwd(), 'VERSION'), 'utf8').trim();
-} catch(e) {
+} catch {
     console.warn("Could not load VERSION file");
 }
 

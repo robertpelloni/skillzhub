@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse, NextRequest } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -105,7 +104,7 @@ export async function GET(req: NextRequest, props: { params: Promise<{ id: strin
     }
 
     return NextResponse.json(manifest)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to generate manifest" }, { status: 500 })
   }
 }

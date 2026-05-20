@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { NextResponse } from "next/server"
 import { prisma } from "@/lib/prisma"
 import { auth } from "@/lib/auth"
@@ -18,7 +17,7 @@ export async function GET() {
     })
 
     return NextResponse.json(keys)
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to fetch API keys" }, { status: 500 })
   }
 }
@@ -56,7 +55,7 @@ export async function POST(req: Request) {
     })
 
     return NextResponse.json({ id: key.id, name: key.name, key: rawKey }, { status: 201 })
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: "Failed to create API key" }, { status: 500 })
   }
 }
