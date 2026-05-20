@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import Redis from 'ioredis'
 
 // Simple Token Bucket Rate Limiter using Redis

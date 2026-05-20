@@ -4,6 +4,7 @@ import { PrismaClient } from '@prisma/client'
 import { probeVideo, extractMetadata } from './src/lib/video-processor'
 import { acceptSubmissionAndTriggerDownstream } from './src/lib/services/submissions'
 import { analyzeVideoWithVLM } from './src/lib/services/vlm-processor'
+import { generateDownloadUrl } from './src/lib/services/storage'
 
 const prisma = new PrismaClient()
 const connection = new Redis(process.env.REDIS_URL || 'redis://localhost:6379')
@@ -20,28 +21,28 @@ const worker = new Worker('video-processing', async job => {
     let height = 1080;
     let fps = 60;
 
-    console.log(`Attempting ffprobe extraction for ${rawStorageKey}...`)
+    // Convert raw storage key (e.g. "uploads/video.mp4") to an accessible signed URL
+    const videoUrl = rawStorageKey.startsWith('http')
+        ? rawStorageKey
+        : await generateDownloadUrl(rawStorageKey);
+
+    console.log(`Attempting ffprobe extraction for ${videoUrl}...`)
     try {
-        if (rawStorageKey.startsWith('http')) {
-             const metadata = await probeVideo(rawStorageKey);
-             const extracted = extractMetadata(metadata);
-             width = extracted.width;
-             height = extracted.height;
-             fps = extracted.fps;
-             duration = extracted.duration;
-             console.log(`Extracted real metadata: ${width}x${height} @ ${fps}fps, ${duration}s`);
-        } else {
-             console.warn("rawStorageKey is not a HTTP URL, falling back to mock ffprobe data.");
-             await new Promise(r => setTimeout(r, 2000))
-        }
+         const metadata = await probeVideo(videoUrl);
+         const extracted = extractMetadata(metadata);
+         width = extracted.width;
+         height = extracted.height;
+         fps = extracted.fps;
+         duration = extracted.duration;
+         console.log(`Extracted real metadata: ${width}x${height} @ ${fps}fps, ${duration}s`);
     } catch(probeError) {
         console.warn("ffprobe failed (is the URL accessible?), falling back to mock metadata.", probeError);
     }
 
     const isQCPass = width >= 1920 && fps >= 30
 
-    console.log(`Attempting VLM analysis for ${rawStorageKey}...`)
-    const vlmLabels = await analyzeVideoWithVLM(rawStorageKey);
+    console.log(`Attempting VLM analysis for ${videoUrl}...`)
+    const vlmLabels = await analyzeVideoWithVLM(videoUrl);
 
     // Update submission with extracted metadata and VLM labels
     const updatedSubmission = await prisma.submission.update({

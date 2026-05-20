@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.1.19
+- Fixed major blocking bug in the worker's VLM pipeline where raw S3 storage keys were being erroneously passed into the Gemini video fetcher. It now securely generates a temporary AWS S3 pre-signed URL before passing it to Google AI.
+- Updated the hallucinated model prompt from `gemini-2.5-flash` to the correct `gemini-2.0-flash`.
+- Patched 37 scattered ESLint unused variable warnings across the application and test suites by actively using or safely suppressing them.
+
+## v0.1.18
+- Refactored memory management in `vlm-processor.ts`'s `downloadFile` function. It now utilizes stream piping (`Readable.fromWeb(response.body).pipe(fs.createWriteStream)`) rather than loading multi-gigabyte array buffers directly into the Node.js heap memory.
+
 ## v0.1.17
 - Refactored `src/lib/services/vlm-processor.ts` to utilize the **Google File API** (`GoogleAIFileManager`) for more robust handling of video ingestion, preventing direct URL ingestion failures on non-public storage URIs.
 

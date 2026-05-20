@@ -3,17 +3,24 @@ import { GoogleAIFileManager } from "@google/generative-ai/server";
 import fs from "fs";
 import path from "path";
 import os from "os";
+import { Readable } from "stream";
+import { pipeline } from "stream/promises";
 
 /**
- * Downloads a file from a URL to a temporary local path.
+ * Downloads a file from a URL to a temporary local path using streams
+ * to prevent large video files from exhausting Node.js heap memory.
  */
 async function downloadFile(url: string, destPath: string): Promise<void> {
     const response = await fetch(url);
     if (!response.ok) throw new Error(`Failed to download file: ${response.statusText}`);
+    if (!response.body) throw new Error("Response body is empty");
 
-    const arrayBuffer = await response.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    fs.writeFileSync(destPath, buffer);
+    // Convert the web stream to a Node.js readable stream
+    // @ts-expect-error - Readable.fromWeb handles the web stream properly in modern Node.js
+    const readable = Readable.fromWeb(response.body);
+    const writeStream = fs.createWriteStream(destPath);
+
+    await pipeline(readable, writeStream);
 }
 
 /**
@@ -42,7 +49,7 @@ export async function analyzeVideoWithVLM(videoUrl: string): Promise<{ action_su
     try {
         const genAI = new GoogleGenerativeAI(apiKey);
         fileManager = new GoogleAIFileManager(apiKey);
-        const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
+        const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
         // 1. Download video to a temporary file
         const tempDir = os.tmpdir();
